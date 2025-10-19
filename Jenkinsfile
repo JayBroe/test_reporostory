@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Pobiera kod z repo (możesz zmienić na własne)
-                git branch: 'main', url: 'https://github.com/TWOJE-REPOZYTORIUM.git'
+                git branch: 'main', url: 'https://github.com/JayBroe/test_reporostory.git'
             }
         }
 
@@ -37,4 +37,5 @@ pipeline {
             echo '❌ Błąd podczas budowania lub testów!'
         }
     }
+
 }

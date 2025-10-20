@@ -1,48 +1,67 @@
 pipeline {
-     agent {
+    agent {
+        // Jenkins uruchomi build w oficjalnym kontenerze Python 3.10
         docker { image 'python:3.10' }
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                // Pobiera kod z repo (możesz zmienić na własne)
-                git branch: 'main', url: 'https://github.com/JayBroe/test_reporostory.git'
-            }
-        }
-
-        stage('Install dependencies') {
-            steps {
-        sh '''
-        python3 -m venv venv
-        . venv/bin/activate
-        pip install -r requirements.txt
-        '''
+    environment {
+        // katalog na wyniki testów
+        VENV_DIR = 'venv'
     }
+
+    stages {
+        stage('Prepare environment') {
+            steps {
+                echo '🛠 Tworzenie środowiska virtualenv...'
+                sh '''
+                    python -m venv $VENV_DIR
+                    . $VENV_DIR/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
         }
 
         stage('Lint') {
             steps {
-                sh 'flake8 . || true'
+                echo '🔍 Sprawdzanie jakości kodu...'
+                sh '''
+                    . $VENV_DIR/bin/activate
+                    flake8 . || true
+                '''
             }
         }
 
         stage('Run tests') {
             steps {
-                sh 'pytest -v'
+                echo '🧪 Uruchamianie testów z pokryciem kodu...'
+                sh '''
+                    . $VENV_DIR/bin/activate
+                    pytest --cov=. --cov-report=xml --cov-report=term-missing
+                '''
+            }
+        }
+
+        stage('Publish coverage') {
+            steps {
+                echo '📊 Zapisywanie raportu pokrycia testów...'
+                // Jenkins automatycznie zaciągnie plik coverage.xml jako artefakt
+                junit 'reports/*.xml'  // tylko jeśli masz raport JUnit — opcjonalne
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'coverage.xml', onlyIfSuccessful: true
+                }
             }
         }
     }
 
     post {
         success {
-            echo '✅ Wszystkie testy zakończone sukcesem!'
+            echo '✅ Pipeline zakończony sukcesem!'
         }
         failure {
-            echo '❌ Błąd podczas budowania lub testów!'
+            echo '❌ Pipeline nie przeszedł — sprawdź logi w Jenkinsie.'
         }
     }
-
 }
-
-

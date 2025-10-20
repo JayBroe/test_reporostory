@@ -2,27 +2,37 @@ pipeline {
     agent any
 
     stages {
-        stage('Setup Python') {
+        
+        stage('Checkout') {
             steps {
-                sh '''
-                apt-get update
-                apt-get install -y python3 python3-pip python3-venv
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                '''
+                git branch: 'main', url: 'https://github.com/JayBroe/test_reporostory.git'
             }
         }
 
+        stage('Install dependencies') {
+            steps {
+                sh 'npm ci'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+                sh 'python3 ops.py'
+            }
+        }
+
+        
         stage('Test') {
             steps {
-                sh '''
-                . venv/bin/activate
-                pytest --cov=. --cov-report=term-missing
-                '''
+                sh 'python3 -m pytest'
             }
         }
     }
 }
-

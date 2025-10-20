@@ -1,67 +1,28 @@
 pipeline {
-    agent {
-        // Jenkins uruchomi build w oficjalnym kontenerze Python 3.10
-        docker { image 'python:3.10' }
-    }
-
-    environment {
-        // katalog na wyniki testów
-        VENV_DIR = 'venv'
-    }
+    agent any
 
     stages {
-        stage('Prepare environment') {
+        stage('Setup Python') {
             steps {
-                echo '🛠 Tworzenie środowiska virtualenv...'
                 sh '''
-                    python -m venv $VENV_DIR
-                    . $VENV_DIR/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
+                apt-get update
+                apt-get install -y python3 python3-pip python3-venv
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt
                 '''
             }
         }
 
-        stage('Lint') {
+        stage('Test') {
             steps {
-                echo '🔍 Sprawdzanie jakości kodu...'
                 sh '''
-                    . $VENV_DIR/bin/activate
-                    flake8 . || true
+                . venv/bin/activate
+                pytest --cov=. --cov-report=term-missing
                 '''
             }
-        }
-
-        stage('Run tests') {
-            steps {
-                echo '🧪 Uruchamianie testów z pokryciem kodu...'
-                sh '''
-                    . $VENV_DIR/bin/activate
-                    pytest --cov=. --cov-report=xml --cov-report=term-missing
-                '''
-            }
-        }
-
-        stage('Publish coverage') {
-            steps {
-                echo '📊 Zapisywanie raportu pokrycia testów...'
-                // Jenkins automatycznie zaciągnie plik coverage.xml jako artefakt
-                junit 'reports/*.xml'  // tylko jeśli masz raport JUnit — opcjonalne
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'coverage.xml', onlyIfSuccessful: true
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Pipeline zakończony sukcesem!'
-        }
-        failure {
-            echo '❌ Pipeline nie przeszedł — sprawdź logi w Jenkinsie.'
         }
     }
 }
+

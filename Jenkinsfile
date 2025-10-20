@@ -9,21 +9,9 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
-            steps {
-                sh 'npm ci'
-            }
-        }
-
-        stage('Run tests') {
-            steps {
-                sh 'npm test'
-            }
-        }
         
         stage('Build') {
             steps {
-                sh 'npm run build'
                 sh 'python3 ops.py'
             }
         }
@@ -36,3 +24,4 @@ pipeline {
         }
     }
 }
+

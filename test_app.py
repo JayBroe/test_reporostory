@@ -13,4 +13,4 @@ def test_subtract():
 
 def test_multiply():
     assert multiply(3,3) == 9
-    assert multiply(8,1) == 2
+    assert multiply(8,1) == 8

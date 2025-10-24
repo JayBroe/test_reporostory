@@ -10,7 +10,7 @@ pipeline {
         
         stage('Build') {
             steps {
-                git branch: 'main', url: 'https://github.com/JayBroe/test_reporostory.git'
+                git branch: 'main', url: 'https://github.com/JayBroe/Python-playground.git'
                 sh 'python3 classes.py'
             }
         }
@@ -23,6 +23,7 @@ pipeline {
         }
     }
 }
+
 
 
 

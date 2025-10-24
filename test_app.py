@@ -1,16 +1,7 @@
-from app import add, subtract, multiply
+import pytest
+from game import Block
 
-
-def test_add():
-    assert add(2, 3) == 5
-    assert add(-1, 1) == 0
-
-
-def test_subtract():
-    assert subtract(5, 3) == 2
-    assert subtract(0, 1) == -1
-
-
-def test_multiply():
-    assert multiply(3,3) == 9
-    assert multiply(8,1) == 8
+def test_block_initial_health_for_non_white_color():
+    block = Block(posx=10, posy=20, width=5, height=5, color="GREEN")
+    # jeśli kolor różny od „WHITE”, health powinien być 100
+    assert block.getHealth() == 100

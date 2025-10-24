@@ -17,4 +17,5 @@ if __name__ == "__main__":
 
     print("5 - 1 =", subtract(5, 1))
 
-    print("2 * 2 =", add(multiply(2,2))
+    print("2 * 2 =", multiply(2,2))
+

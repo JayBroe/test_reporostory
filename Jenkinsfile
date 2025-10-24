@@ -2,6 +2,12 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/JayBroe/Python-playground.git']]])
+            }
+        }
+
         
         stage('Checkout') {
             steps {
@@ -12,7 +18,7 @@ pipeline {
         
         stage('Build') {
             steps {
-                sh 'python3 app.py'
+                sh 'python3 classes.py'
             }
         }
 
@@ -24,5 +30,6 @@ pipeline {
         }
     }
 }
+
 
 

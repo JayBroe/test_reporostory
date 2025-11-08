@@ -27,7 +27,7 @@ pipeline {
             echo '✅ Build zakończony sukcesem!'
         }
         failure {
-            echo '❌ Błąd podczas builda.'
+            echo '❌ Błąd podczas builda. Sprawdź logi.'
         }
     }
 

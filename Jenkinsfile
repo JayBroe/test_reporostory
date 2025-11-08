@@ -21,6 +21,16 @@ pipeline {
                 sh 'python3 -m pytest'
             }
         }
+
+         post {
+        success {
+            echo '✅ Build zakończony sukcesem!'
+        }
+        failure {
+            echo '❌ Błąd podczas builda.'
+        }
+    }
+
     }
 }
 

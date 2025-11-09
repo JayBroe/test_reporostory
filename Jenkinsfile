@@ -26,6 +26,7 @@ pipeline {
             steps {
                 archiveArtifacts artifacts: 'app.zip', fingerprint: true
             }
+        }
 
          post {
         success {

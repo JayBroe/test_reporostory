@@ -14,22 +14,6 @@ pipeline {
                 sh 'python3 classes.py'
                 sh 'zip -r classes.zip .'
             }
-        }
-
-        
-        stage('Test') {
-            steps {
-                sh 'python3 -m pytest'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                archiveArtifacts artifacts: 'classes.zip', fingerprint: true
-            }
-        }
-        }
-
         post {
             success {
                 echo '✅ Build zakończony sukcesem!'
@@ -37,7 +21,38 @@ pipeline {
             failure {
                 echo '❌ Błąd podczas builda. Sprawdź logi.'
         }
-    }
+    }            
+        }
+
+        
+        stage('Test') {
+            steps {
+                sh 'python3 -m pytest'
+            }
+        post {
+            success {
+                echo '✅ Test zakończony sukcesem!'
+        }
+            failure {
+                echo '❌ Błąd podczas testu. Sprawdź logi.'
+        }
+    }            
+        }
+
+        stage('Deploy') {
+            steps {
+                archiveArtifacts artifacts: 'classes.zip', fingerprint: true
+            }
+        }
+        post {
+            success {
+                echo '✅ Deploy zakończony sukcesem!'
+        }
+            failure {
+                echo '❌ Błąd podczas deployowania. Sprawdź logi.'
+        }
+    }       
+        }
 }
 
 

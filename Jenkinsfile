@@ -27,16 +27,15 @@ pipeline {
                 archiveArtifacts artifacts: 'app.zip', fingerprint: true
             }
         }
-
-         post {
-        success {
-            echo '✅ Build zakończony sukcesem!'
         }
-        failure {
-            echo '❌ Błąd podczas builda. Sprawdź logi.'
-        }
-    }
 
+        post {
+            success {
+                echo '✅ Build zakończony sukcesem!'
+        }
+            failure {
+                echo '❌ Błąd podczas builda. Sprawdź logi.'
+        }
     }
 }
 

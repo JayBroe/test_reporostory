@@ -43,7 +43,6 @@ pipeline {
             steps {
                 archiveArtifacts artifacts: 'classes.zip', fingerprint: true
             }
-        }
         post {
             success {
                 echo '✅ Deploy zakończony sukcesem!'
@@ -51,7 +50,8 @@ pipeline {
             failure {
                 echo '❌ Błąd podczas deployowania. Sprawdź logi.'
         }
-    }       
+    }             
+        }      
         }
 }
 

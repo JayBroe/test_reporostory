@@ -24,7 +24,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                archiveArtifacts artifacts: 'app.zip', fingerprint: true
+                archiveArtifacts artifacts: 'classes.zip', fingerprint: true
             }
         }
         }

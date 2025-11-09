@@ -12,6 +12,7 @@ pipeline {
             steps {
                 git branch: 'main', url: 'https://github.com/JayBroe/Python-playground.git'
                 sh 'python3 classes.py'
+                sh 'zip -r classes.zip .'
             }
         }
 

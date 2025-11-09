@@ -22,6 +22,11 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                archiveArtifacts artifacts: 'app.zip', fingerprint: true
+            }
+
          post {
         success {
             echo '✅ Build zakończony sukcesem!'
